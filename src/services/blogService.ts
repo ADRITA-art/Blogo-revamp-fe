@@ -108,8 +108,10 @@ export const deleteBlog = async (id: string): Promise<void> => {
 export const generateContent = async (topic: string): Promise<string> => {
   try {
     const response = await api.post('/ai/generate', { topic });
-    return response.data.content;
+    console.log('AI Response:', response.data); // Debug log
+    return response.data.content || response.data;
   } catch (error) {
+    console.error('AI Generation Error:', error); // Debug log
     throw new Error('Failed to generate content');
   }
 };

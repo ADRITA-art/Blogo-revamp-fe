@@ -26,9 +26,27 @@ const CreateBlogPage: React.FC = () => {
     setIsGenerating(true);
     try {
       const generatedContent = await generateContent(topic);
-      setContent(generatedContent);
+      console.log('Generated Content:', generatedContent); // Debug log
+      
+      // Ensure we have a string to work with
+      const contentStr = typeof generatedContent === 'string' ? generatedContent : JSON.stringify(generatedContent);
+      
+      // First try to detect if it's already HTML
+      if (contentStr.trim().startsWith('<')) {
+        setContent(contentStr);
+      } else {
+        // Convert plain text to HTML paragraphs
+        const htmlContent = contentStr
+          .split('\n\n')
+          .map(para => `<p>${para.replace(/\n/g, '<br/>')}</p>`)
+          .join('');
+        console.log('Formatted HTML:', htmlContent); // Debug log
+        setContent(htmlContent);
+      }
+      
       toast.success('Content generated successfully');
     } catch (error) {
+      console.error('Generation Error:', error); // Debug log
       toast.error('Failed to generate content');
     } finally {
       setIsGenerating(false);
@@ -101,13 +119,6 @@ const CreateBlogPage: React.FC = () => {
             </p>
           </div>
           
-          <div className="mb-8">
-            <label className="block text-gray-700 font-medium mb-2">
-              Content
-            </label>
-            <RichTextEditor content={content} onChange={setContent} />
-          </div>
-          
           <div className="mb-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h3 className="flex items-center text-lg font-medium text-gray-900 mb-3">
               <Sparkles size={18} className="mr-2 text-blue-600" />
@@ -138,8 +149,21 @@ const CreateBlogPage: React.FC = () => {
               </button>
             </div>
             <p className="mt-2 text-sm text-gray-500">
-              AI-generated content should be reviewed and edited before publishing
+              The generated content will appear in the editor below. Review and edit it before publishing.
             </p>
+          </div>
+          
+          <div className="mb-8">
+            <label className="block text-gray-700 font-medium mb-2">
+              Content
+            </label>
+            {content && (
+              <div className="mb-2 flex items-center text-sm text-gray-500">
+                <Sparkles size={14} className="mr-1" />
+                {isGenerating ? 'Generating content...' : 'AI-generated content - review and edit before publishing'}
+              </div>
+            )}
+            <RichTextEditor content={content} onChange={setContent} />
           </div>
           
           <div className="flex justify-end space-x-4">
