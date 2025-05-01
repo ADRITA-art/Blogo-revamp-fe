@@ -27,7 +27,7 @@ const BlogDetailPage: React.FC = () => {
         setError(null);
         
         // Update page title
-        document.title = `${fetchedBlog.title} | Inkwell`;
+        document.title = `${fetchedBlog.title} | Blogosaurus`;
       } catch (err) {
         setError('Failed to load blog. It may have been removed or you may not have permission to view it.');
       } finally {
@@ -39,7 +39,7 @@ const BlogDetailPage: React.FC = () => {
     
     // Reset title on unmount
     return () => {
-      document.title = 'Inkwell';
+      document.title = 'Blogosaurus';
     };
   }, [id]);
 
@@ -59,7 +59,7 @@ const BlogDetailPage: React.FC = () => {
     }
   };
 
-  const isAuthor = user && blog && user.id === blog.author.id;
+  const isAuthor = user && blog && typeof blog.author !== 'string' && user.id === blog.author.id;
 
   if (loading) {
     return (

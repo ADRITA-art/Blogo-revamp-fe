@@ -37,7 +37,7 @@ export const LoginPage: React.FC = () => {
       <div className="max-w-md w-full bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-8">
           <h2 className="text-2xl font-serif font-bold text-center text-gray-900 mb-8">
-            Sign in to Inkwell
+            Sign in to Blogosaurus
           </h2>
           
           {error && (
